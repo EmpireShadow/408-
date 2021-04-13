@@ -31,3 +31,77 @@ bool dequeue(queue &q,int &x){
   q.front=(q.front+1)%Maxsize;
   return true;
 }
+
+
+//队列的链式实现
+typedef struct LNode{
+  int data;
+  struct LNode *next;
+}LNode;
+
+typedef struct{
+  LNode *front,*rear;
+}Linkqueue;
+  
+//初始化 
+//有头结点
+void Initqueue(Linkqueue &q){
+  q.rear=q.front=(Linkqueue*)malloc(sizeofqueue);
+  q.front->next=NULL;
+}
+//无头结点
+void Initqueue(Linkqueue &q){
+  q.rear=NULL;
+  q.front=NULL;
+}
+
+//入队 在队尾
+//有头结点
+bool enqueue(Linkqueue &q,int x){
+  LNode* s=(LNode*)malloc(sizeof(LNode));
+  if(s==NULL) return false;
+  s->data=x;
+  s->next=NULL;
+  q.rear->next=s;
+  q.rear=s;
+  return true;
+}
+//无头结点
+void enqueue(Linkqueue &q,int x){
+  LNode* s=(LNode*)malloc(sizeof(LNode));
+  s->data=x;
+  s->next=NULL;
+  if(q.front==NULL){
+    q.front=s;
+    q.rear=s;
+  }
+  else{
+    q.rear->next=s;
+    q.rear=s;
+  }
+}
+
+
+//出队 在队头
+//有头结点
+bool dequeue(Linkqueue &q,int &x){
+  if(q.rear==q.front) return false;
+  LNode* s=q.front->next;
+  x=s->data;
+  q.front->next=s->next;
+  if(q.rear==p) q.rear=q.front;
+  free(s);
+  return true;
+}
+//无头结点
+bool dequeue(Linkqueue &q,int &x){
+  if(q.front==NULL) return false;
+  LNode* s=q.front;
+  q.front=s->next;
+  if(q.rear==s){
+    q.rear=NULL;
+    q.front=NULL;
+  }
+  free(s);
+  return true;
+  
